@@ -1,0 +1,1953 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aventuras Fantásticas — Ficha Interativa</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cinzel+Decorative:wght@700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+  <style>
+    /* ══════════════════════════════════════════════
+       RESET & VARIÁVEIS
+    ══════════════════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:           #0d0c18;
+      --surface:      #14122a;
+      --surface2:     #1d1a35;
+      --surface3:     #252240;
+      --border:       #38344f;
+      --border-light: #4a4568;
+      --gold:         #c9941a;
+      --gold-l:       #f0c040;
+      --gold-d:       #8a6012;
+      --red:          #a93226;
+      --red-l:        #e74c3c;
+      --green:        #1e8449;
+      --green-l:      #27ae60;
+      --blue:         #1a6fa8;
+      --blue-l:       #3498db;
+      --purple:       #7d3c98;
+      --purple-l:     #9b59b6;
+      --text:         #e5e0cc;
+      --text-dim:     #8e8a78;
+      --text-faint:   #55524a;
+      --shadow:       rgba(0,0,0,.6);
+      --glow-gold:    rgba(201,148,26,.25);
+      --glow-red:     rgba(231,76,60,.25);
+      --glow-blue:    rgba(52,152,219,.25);
+      --glow-purple:  rgba(155,89,182,.25);
+      --font-deco:    'Cinzel Decorative', serif;
+      --font-head:    'Cinzel', serif;
+      --font-body:    'Lora', serif;
+      --radius:       8px;
+      --radius-sm:    4px;
+    }
+
+    html { font-size: 16px; scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      background-image:
+        radial-gradient(ellipse 80% 40% at 50% 0%, #1e1640 0%, transparent 70%),
+        url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.015'%3E%3Cpath d='M40 2L42 38h36l-29 21 11 34L40 72 20 93l11-34L2 38h36z'/%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    /* ══════════════════════════════════════════════
+       SCROLLBAR
+    ══════════════════════════════════════════════ */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--surface); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--gold-d); }
+
+    /* ══════════════════════════════════════════════
+       HEADER
+    ══════════════════════════════════════════════ */
+    header {
+      background: linear-gradient(180deg, #1a1635 0%, var(--surface) 100%);
+      border-bottom: 2px solid var(--gold-d);
+      padding: .875rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      box-shadow: 0 4px 24px rgba(0,0,0,.5), 0 1px 0 var(--glow-gold) inset;
+      position: sticky;
+      top: 0;
+      z-index: 200;
+    }
+
+    .hdr-brand {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      min-width: 0;
+    }
+
+    .hdr-icon {
+      font-size: 1.8rem;
+      line-height: 1;
+      filter: drop-shadow(0 0 8px var(--gold));
+    }
+
+    .hdr-text h1 {
+      font-family: var(--font-deco);
+      color: var(--gold);
+      font-size: clamp(.9rem, 3vw, 1.35rem);
+      text-shadow: 0 0 24px var(--glow-gold);
+      letter-spacing: 1px;
+      white-space: nowrap;
+    }
+
+    .hdr-text p {
+      font-family: var(--font-head);
+      color: var(--text-dim);
+      font-size: .62rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+
+    .hdr-actions {
+      display: flex;
+      gap: .4rem;
+      flex-shrink: 0;
+    }
+
+    /* ══════════════════════════════════════════════
+       BOTÕES
+    ══════════════════════════════════════════════ */
+    .btn {
+      font-family: var(--font-head);
+      font-size: .7rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      border: none;
+      cursor: pointer;
+      padding: .45rem .9rem;
+      border-radius: var(--radius-sm);
+      transition: all .18s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: .35rem;
+      white-space: nowrap;
+      line-height: 1;
+    }
+    .btn:active { transform: scale(.95); }
+    .btn:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+
+    .btn-gold {
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-d) 100%);
+      color: #0d0c18;
+      font-weight: 700;
+      box-shadow: 0 2px 10px var(--glow-gold);
+    }
+    .btn-gold:hover:not(:disabled) {
+      background: linear-gradient(135deg, var(--gold-l) 0%, var(--gold) 100%);
+      box-shadow: 0 4px 18px var(--glow-gold);
+    }
+
+    .btn-red {
+      background: linear-gradient(135deg, var(--red-l) 0%, var(--red) 100%);
+      color: #fff;
+      font-weight: 700;
+      box-shadow: 0 2px 10px var(--glow-red);
+    }
+    .btn-red:hover:not(:disabled) {
+      background: linear-gradient(135deg, #ff6b5b 0%, var(--red-l) 100%);
+      box-shadow: 0 4px 18px var(--glow-red);
+    }
+
+    .btn-blue {
+      background: linear-gradient(135deg, var(--blue-l) 0%, var(--blue) 100%);
+      color: #fff;
+      font-weight: 700;
+      box-shadow: 0 2px 10px var(--glow-blue);
+    }
+    .btn-blue:hover:not(:disabled) { filter: brightness(1.15); }
+
+    .btn-purple {
+      background: linear-gradient(135deg, var(--purple-l) 0%, var(--purple) 100%);
+      color: #fff;
+      font-weight: 700;
+      box-shadow: 0 2px 10px var(--glow-purple);
+    }
+    .btn-purple:hover:not(:disabled) { filter: brightness(1.15); }
+
+    .btn-green {
+      background: linear-gradient(135deg, var(--green-l) 0%, var(--green) 100%);
+      color: #fff;
+      font-weight: 700;
+    }
+    .btn-green:hover:not(:disabled) { filter: brightness(1.2); }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-dim);
+      border: 1px solid var(--border);
+    }
+    .btn-ghost:hover:not(:disabled) { color: var(--text); border-color: var(--gold-d); background: var(--surface3); }
+
+    .btn-danger {
+      background: transparent;
+      color: var(--red-l);
+      border: 1px solid var(--red);
+    }
+    .btn-danger:hover:not(:disabled) { background: rgba(231,76,60,.12); }
+
+    .btn-sm  { padding: .3rem .65rem; font-size: .65rem; }
+    .btn-lg  { padding: .7rem 1.4rem; font-size: .8rem; }
+    .btn-xl  { padding: .85rem 1.75rem; font-size: .9rem; }
+    .btn-ico { padding: .35rem .5rem; min-width: 32px; justify-content: center; }
+
+    /* ══════════════════════════════════════════════
+       TABS
+    ══════════════════════════════════════════════ */
+    .tabs-nav {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    .tabs-nav::-webkit-scrollbar { display: none; }
+
+    .tab-btn {
+      font-family: var(--font-head);
+      font-size: .68rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      padding: .85rem 1.1rem;
+      cursor: pointer;
+      transition: all .2s;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+    }
+    .tab-btn:hover  { color: var(--text); background: var(--surface2); }
+    .tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+    /* ══════════════════════════════════════════════
+       LAYOUT PRINCIPAL
+    ══════════════════════════════════════════════ */
+    main {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 1.25rem 1rem 3rem;
+    }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ══════════════════════════════════════════════
+       CARDS
+    ══════════════════════════════════════════════ */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.15rem 1.25rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 4px 20px var(--shadow);
+    }
+
+    .card-title {
+      font-family: var(--font-head);
+      font-size: .72rem;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.1rem;
+      padding-bottom: .55rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+    }
+
+    .card-title .badge-info {
+      margin-left: auto;
+      background: var(--surface3);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      font-size: .58rem;
+      letter-spacing: 1px;
+      color: var(--text-dim);
+      padding: .1rem .4rem;
+    }
+
+    hr.sep {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 1rem 0;
+    }
+
+    /* ══════════════════════════════════════════════
+       FORMULÁRIOS
+    ══════════════════════════════════════════════ */
+    .form-group { margin-bottom: .9rem; }
+    .form-group:last-child { margin-bottom: 0; }
+
+    label, .form-label {
+      display: block;
+      font-family: var(--font-head);
+      font-size: .63rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: .35rem;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    textarea,
+    select {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: .9rem;
+      padding: .5rem .75rem;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--gold-d);
+      box-shadow: 0 0 0 3px var(--glow-gold);
+    }
+    textarea { resize: vertical; min-height: 120px; }
+    input[type="number"] { -moz-appearance: textfield; }
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+    /* ══════════════════════════════════════════════
+       BLOCOS DE ATRIBUTO
+    ══════════════════════════════════════════════ */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: .85rem;
+    }
+
+    .stat-block {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem .75rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      transition: box-shadow .3s;
+    }
+    .stat-block::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity .3s;
+      border-radius: var(--radius);
+    }
+    .stat-block.flash::after { animation: statFlash .5s ease-out forwards; }
+
+    @keyframes statFlash {
+      0%   { opacity: .3; }
+      100% { opacity: 0; }
+    }
+
+    .stat-block .stat-bar {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      border-radius: var(--radius) var(--radius) 0 0;
+    }
+
+    .stat-habilidade .stat-bar { background: linear-gradient(90deg, var(--blue), var(--blue-l)); }
+    .stat-energia    .stat-bar { background: linear-gradient(90deg, var(--red), var(--red-l)); }
+    .stat-sorte      .stat-bar { background: linear-gradient(90deg, var(--purple), var(--purple-l)); }
+
+    .stat-habilidade::after { background: var(--blue-l); }
+    .stat-energia::after    { background: var(--red-l); }
+    .stat-sorte::after      { background: var(--purple-l); }
+
+    .stat-habilidade { box-shadow: 0 0 0 0 var(--glow-blue); }
+    .stat-energia    { box-shadow: 0 0 0 0 var(--glow-red); }
+    .stat-sorte      { box-shadow: 0 0 0 0 var(--glow-purple); }
+
+    .stat-name {
+      font-family: var(--font-head);
+      font-size: .6rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: .4rem;
+      margin-top: .2rem;
+    }
+
+    .stat-value-current {
+      font-family: var(--font-head);
+      font-size: 2.6rem;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: .2rem;
+    }
+    .stat-habilidade .stat-value-current { color: var(--blue-l); }
+    .stat-energia    .stat-value-current { color: var(--red-l); }
+    .stat-sorte      .stat-value-current { color: var(--purple-l); }
+
+    .stat-initial-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .3rem;
+      margin-bottom: .7rem;
+    }
+
+    .stat-initial-label {
+      font-size: .6rem;
+      color: var(--text-faint);
+      font-family: var(--font-head);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .stat-initial-input {
+      width: 40px !important;
+      text-align: center;
+      font-size: .78rem !important;
+      padding: .15rem .25rem !important;
+      background: var(--surface3) !important;
+      border-color: var(--border-light) !important;
+      color: var(--text-dim) !important;
+    }
+
+    .stat-controls {
+      display: flex;
+      justify-content: center;
+      gap: .45rem;
+    }
+
+    .stat-adj-btn {
+      width: 30px; height: 30px;
+      background: var(--surface3);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      color: var(--text-dim);
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all .15s;
+      line-height: 1;
+      font-family: monospace;
+    }
+    .stat-adj-btn:hover { border-color: var(--gold-d); color: var(--gold); }
+    .stat-adj-btn:active { transform: scale(.88); }
+
+    /* ══════════════════════════════════════════════
+       INVENTÁRIO
+    ══════════════════════════════════════════════ */
+    .resource-row {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      flex-wrap: wrap;
+      margin-bottom: .75rem;
+    }
+    .resource-row:last-child { margin-bottom: 0; }
+
+    .resource-label {
+      font-family: var(--font-head);
+      font-size: .63rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      min-width: 90px;
+    }
+
+    .counter-wrap {
+      display: flex;
+      align-items: center;
+      gap: .35rem;
+    }
+    .counter-wrap input {
+      width: 62px !important;
+      text-align: center;
+      font-size: .95rem !important;
+      padding: .4rem !important;
+    }
+
+    .equip-list { list-style: none; margin-bottom: .75rem; }
+    .equip-empty { font-style: italic; color: var(--text-dim); font-size: .85rem; padding: .5rem 0; }
+
+    .equip-item {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      padding: .4rem .65rem;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      margin-bottom: .4rem;
+      font-size: .88rem;
+      animation: itemIn .2s ease-out;
+    }
+    @keyframes itemIn { from { opacity:0; transform:translateY(-4px); } }
+
+    .equip-item span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    .equip-remove {
+      background: none;
+      border: none;
+      color: var(--text-faint);
+      cursor: pointer;
+      font-size: .85rem;
+      padding: 0 .2rem;
+      transition: color .18s;
+      flex-shrink: 0;
+    }
+    .equip-remove:hover { color: var(--red-l); }
+
+    .add-row { display: flex; gap: .5rem; }
+    .add-row input { flex: 1; }
+
+    /* ══════════════════════════════════════════════
+       DADOS
+    ══════════════════════════════════════════════ */
+    .dice-area { text-align: center; }
+
+    .dice-tray {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1.25rem;
+      min-height: 90px;
+      margin: 1.25rem 0 .75rem;
+    }
+
+    .die-face {
+      width: 76px; height: 76px;
+      background: var(--surface2);
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-head);
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--gold);
+      box-shadow: 0 4px 16px var(--shadow), inset 0 1px 0 rgba(255,255,255,.05);
+      transition: all .25s;
+      position: relative;
+    }
+
+    .die-face.rolling {
+      animation: diceRoll .45s cubic-bezier(.4,0,.2,1);
+      border-color: var(--gold);
+      box-shadow: 0 4px 28px var(--glow-gold);
+    }
+
+    @keyframes diceRoll {
+      0%   { transform: rotate(-15deg) scale(.75); opacity: .3; }
+      40%  { transform: rotate(10deg) scale(1.12); opacity: .9; }
+      70%  { transform: rotate(-5deg) scale(.97); }
+      100% { transform: rotate(0deg) scale(1); opacity: 1; }
+    }
+
+    .dice-label {
+      font-family: var(--font-head);
+      font-size: .75rem;
+      color: var(--text-dim);
+      letter-spacing: 1px;
+    }
+
+    .dice-result-msg {
+      min-height: 1.6rem;
+      font-family: var(--font-head);
+      font-size: .9rem;
+      color: var(--text-dim);
+      margin-bottom: 1.25rem;
+    }
+    .dice-result-msg.lucky   { color: var(--green-l); }
+    .dice-result-msg.unlucky { color: var(--red-l); }
+
+    .dice-btn-row {
+      display: flex;
+      justify-content: center;
+      gap: .6rem;
+      flex-wrap: wrap;
+    }
+
+    /* Testar Sorte */
+    .luck-panel {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .75rem;
+      padding: .5rem 0;
+    }
+
+    .luck-current-display {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .luck-current-display .lcd-label {
+      font-family: var(--font-head);
+      font-size: .6rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+    .luck-current-display .lcd-value {
+      font-family: var(--font-head);
+      font-size: 3.2rem;
+      color: var(--purple-l);
+      line-height: 1.1;
+    }
+
+    .luck-result-msg {
+      font-family: var(--font-head);
+      font-size: 1rem;
+      min-height: 2.5rem;
+      text-align: center;
+    }
+
+    /* Log de rolagens */
+    .roll-log {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: .65rem .85rem;
+      max-height: 220px;
+      overflow-y: auto;
+      font-size: .82rem;
+      line-height: 1.8;
+    }
+    .roll-log .log-empty { color: var(--text-dim); font-style: italic; }
+    .roll-log .roll-entry { border-bottom: 1px solid rgba(255,255,255,.04); padding: .1rem 0; }
+    .roll-log .roll-entry:last-child { border-bottom: none; }
+    .roll-entry .ts { color: var(--text-faint); font-size: .72rem; }
+
+    /* ══════════════════════════════════════════════
+       COMBATE
+    ══════════════════════════════════════════════ */
+    .combat-arena {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: .75rem;
+      align-items: start;
+      margin-bottom: 1rem;
+    }
+
+    .combatant {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem;
+    }
+    .combatant.hero   { border-top: 3px solid var(--blue-l); }
+    .combatant.monster { border-top: 3px solid var(--red-l); }
+
+    .combatant-name {
+      font-family: var(--font-head);
+      font-size: .75rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-align: center;
+      margin-bottom: .85rem;
+    }
+    .combatant.hero .combatant-name { color: var(--blue-l); }
+    .combatant.monster .combatant-name { color: var(--red-l); }
+
+    .combat-stat {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: .85rem;
+      padding: .25rem 0;
+      border-bottom: 1px solid rgba(255,255,255,.04);
+    }
+    .combat-stat:last-of-type { border-bottom: none; }
+    .combat-stat .csl {
+      font-family: var(--font-head);
+      font-size: .58rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+    .combat-stat .csv { font-family: var(--font-head); font-size: 1rem; }
+
+    .fa-box {
+      background: var(--surface3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      text-align: center;
+      padding: .35rem .5rem;
+      margin-top: .75rem;
+    }
+    .fa-box .fa-label {
+      font-family: var(--font-head);
+      font-size: .55rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-faint);
+    }
+    .fa-box .fa-val {
+      font-family: var(--font-head);
+      font-size: 1.6rem;
+      color: var(--gold);
+      line-height: 1.1;
+    }
+
+    .combat-vs {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-deco);
+      font-size: 1.25rem;
+      color: var(--gold-d);
+      padding-top: 2.5rem;
+    }
+
+    .combat-actions {
+      display: flex;
+      justify-content: center;
+      gap: .55rem;
+      flex-wrap: wrap;
+      padding: .25rem 0 .5rem;
+    }
+
+    .combat-log {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: .65rem .85rem;
+      max-height: 260px;
+      overflow-y: auto;
+      font-size: .83rem;
+      line-height: 1.75;
+    }
+    .combat-log .log-empty { color: var(--text-dim); font-style: italic; }
+
+    .cl-entry { border-bottom: 1px solid rgba(255,255,255,.04); padding: .1rem 0; }
+    .cl-entry:last-child { border-bottom: none; }
+    .cl-ts { color: var(--text-faint); font-size: .7rem; }
+
+    .cl-system    { color: var(--gold); font-style: italic; }
+    .cl-hero-win  { color: var(--blue-l); }
+    .cl-mob-win   { color: var(--red-l); }
+    .cl-tie       { color: var(--text-dim); }
+    .cl-lucky     { color: var(--green-l); font-weight: bold; }
+    .cl-unlucky   { color: var(--red-l); font-weight: bold; }
+    .cl-divider   { color: var(--text-faint); text-align: center; font-size: .75rem; letter-spacing: 3px; }
+
+    /* Monster mini counter */
+    .mini-counter { display: flex; align-items: center; gap: .3rem; }
+    .mini-counter input { width: 54px !important; text-align: center; font-size: .88rem !important; padding: .3rem !important; }
+    .mc-btn {
+      width: 26px; height: 26px;
+      background: var(--surface3);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      color: var(--text-dim);
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all .15s;
+      font-family: monospace;
+      line-height: 1;
+    }
+    .mc-btn:hover { border-color: var(--gold-d); color: var(--gold); }
+
+    /* ══════════════════════════════════════════════
+       NOTAS
+    ══════════════════════════════════════════════ */
+    textarea#notas { min-height: 300px; line-height: 1.65; }
+    .char-count { font-size: .7rem; color: var(--text-dim); }
+
+    /* ══════════════════════════════════════════════
+       SAVE/LOAD (aba Notas)
+    ══════════════════════════════════════════════ */
+    .save-row { display: flex; gap: .5rem; flex-wrap: wrap; align-items: center; }
+    .save-row .btn-file-label {
+      font-family: var(--font-head);
+      font-size: .7rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      background: transparent;
+      color: var(--text-dim);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: .45rem .9rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: .35rem;
+      transition: all .18s;
+    }
+    .save-row .btn-file-label:hover { color: var(--text); border-color: var(--gold-d); background: var(--surface3); }
+
+    /* ══════════════════════════════════════════════
+       TOAST NOTIFICATION
+    ══════════════════════════════════════════════ */
+    #toast {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(4rem);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: .6rem 1.2rem;
+      font-family: var(--font-head);
+      font-size: .75rem;
+      letter-spacing: 1px;
+      color: var(--text);
+      box-shadow: 0 8px 30px var(--shadow);
+      z-index: 999;
+      opacity: 0;
+      transition: all .3s ease;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+    #toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+    #toast.toast-ok     { border-color: var(--green-l); color: var(--green-l); }
+    #toast.toast-err    { border-color: var(--red-l); color: var(--red-l); }
+    #toast.toast-info   { border-color: var(--gold-d); color: var(--gold); }
+
+    /* ══════════════════════════════════════════════
+       REGRAS RESUMO
+    ══════════════════════════════════════════════ */
+    .rules-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: .6rem;
+      margin-top: .75rem;
+    }
+    .rule-item {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: .6rem .75rem;
+      font-size: .8rem;
+      line-height: 1.5;
+    }
+    .rule-item strong {
+      font-family: var(--font-head);
+      font-size: .65rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: .25rem;
+    }
+    .rule-item.habilidade strong { color: var(--blue-l); }
+    .rule-item.energia    strong { color: var(--red-l); }
+    .rule-item.sorte      strong { color: var(--purple-l); }
+
+    /* ══════════════════════════════════════════════
+       FOOTER
+    ══════════════════════════════════════════════ */
+    footer {
+      text-align: center;
+      padding: 1.5rem 1rem;
+      border-top: 1px solid var(--border);
+      font-family: var(--font-head);
+      font-size: .6rem;
+      letter-spacing: 1.5px;
+      color: var(--text-faint);
+      text-transform: uppercase;
+    }
+
+    /* ══════════════════════════════════════════════
+       RESPONSIVO
+    ══════════════════════════════════════════════ */
+    @media (max-width: 600px) {
+      /* Header compacto — cabe título + 2 botões ícone */
+      header            { padding: .6rem .85rem; gap: .5rem; }
+      .hdr-icon         { font-size: 1.35rem; }
+      .hdr-text h1      { font-size: .78rem; letter-spacing: 0; }
+      .hdr-text p       { display: none; }
+      .hdr-brand        { gap: .5rem; }
+      .hdr-btn-label    { display: none; }          /* "Salvar" / "Carregar" → só emoji */
+      .hdr-actions      { gap: .3rem; }
+      .hdr-actions .btn { padding: .38rem .55rem; font-size: .65rem; }
+
+      /* Abas — só ícone */
+      .tab-label { display: none; }
+      .tab-btn   { padding: .8rem .95rem; }
+
+      /* Layout */
+      main  { padding: 1rem .75rem 3rem; }
+      .card { padding: 1rem; }
+
+      /* Atributos — 2 colunas (Sorte vai pra segunda linha) */
+      .stats-grid         { grid-template-columns: 1fr 1fr; gap: .55rem; }
+      .stat-value-current { font-size: 2rem; }
+      .stat-initial-input { width: 34px !important; font-size: .7rem !important; }
+
+      /* Inventário */
+      .resource-suffix { display: none; }           /* "moedas de ouro" → esconde */
+      .add-row         { flex-wrap: wrap; gap: .4rem; }
+      .add-row input   { flex: 1 1 100%; }          /* input ocupa linha inteira */
+      .add-row .btn    { align-self: flex-end; }    /* botão fica abaixo alinhado à direita */
+
+      /* Combate */
+      .combat-arena { grid-template-columns: 1fr; }
+      .combat-vs    { padding-top: 0; }
+    }
+
+    @media (max-width: 400px) {
+      .stats-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════
+     CABEÇALHO
+══════════════════════════════════════════════════════════ -->
+<header>
+  <div class="hdr-brand">
+    <div class="hdr-icon">⚔</div>
+    <div class="hdr-text">
+      <h1>Aventuras Fantásticas</h1>
+      <p>Ficha Interativa do Aventureiro</p>
+    </div>
+  </div>
+  <div class="hdr-actions">
+    <button class="btn btn-gold btn-sm" onclick="exportarJSON()" title="Salvar ficha como arquivo JSON">💾 <span class="hdr-btn-label">Salvar</span></button>
+    <label class="btn btn-ghost btn-sm" title="Carregar ficha de arquivo JSON" style="cursor:pointer">
+      📂 <span class="hdr-btn-label">Carregar</span>
+      <input type="file" accept=".json" style="display:none" onchange="importarJSON(event)">
+    </label>
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════════════════════════
+     ABAS
+══════════════════════════════════════════════════════════ -->
+<nav class="tabs-nav" role="tablist">
+  <button class="tab-btn active" onclick="abrirAba('personagem',this)" role="tab">🧙 <span class="tab-label">Personagem</span></button>
+  <button class="tab-btn" onclick="abrirAba('inventario',this)" role="tab">🎒 <span class="tab-label">Inventário</span></button>
+  <button class="tab-btn" onclick="abrirAba('dados',this)" role="tab">🎲 <span class="tab-label">Dados</span></button>
+  <button class="tab-btn" onclick="abrirAba('combate',this)" role="tab">⚔️ <span class="tab-label">Combate</span></button>
+  <button class="tab-btn" onclick="abrirAba('notas',this)" role="tab">📜 <span class="tab-label">Notas</span></button>
+</nav>
+
+<!-- ══════════════════════════════════════════════════════════
+     CONTEÚDO PRINCIPAL
+══════════════════════════════════════════════════════════ -->
+<main>
+
+  <!-- ===== PERSONAGEM ===== -->
+  <section id="tab-personagem" class="tab-panel active">
+
+    <div class="card">
+      <div class="card-title">🧙 Identidade</div>
+      <div class="form-group">
+        <label for="inp-nome">Nome do Aventureiro</label>
+        <input type="text" id="inp-nome" placeholder="Qual é o seu nome, viajante?" autocomplete="off" oninput="E.nome=this.value;gravar()">
+      </div>
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+        <button class="btn btn-gold" onclick="gerarPersonagem()">🎲 Gerar Personagem Aleatório</button>
+        <button class="btn btn-ghost btn-sm" onclick="confirmarReset()">🗑️ Resetar Ficha</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">
+        📊 Atributos
+        <span class="badge-info">Atual / Inicial</span>
+      </div>
+      <div class="stats-grid">
+
+        <!-- HABILIDADE -->
+        <div class="stat-block stat-habilidade" id="sb-hab">
+          <div class="stat-bar"></div>
+          <div class="stat-name">Habilidade</div>
+          <div class="stat-value-current" id="disp-hab-atual">—</div>
+          <div class="stat-initial-row">
+            <span class="stat-initial-label">Máx</span>
+            <input type="number" class="stat-initial-input" id="inp-hab-ini" min="1" max="12" value="0"
+              title="Valor inicial de Habilidade (1d6+6)"
+              oninput="setInicial('hab',+this.value)">
+          </div>
+          <div class="stat-controls">
+            <button class="stat-adj-btn" onclick="ajustarStat('hab',-1)" title="−1 Habilidade">−</button>
+            <button class="stat-adj-btn" onclick="ajustarStat('hab',+1)" title="+1 Habilidade">+</button>
+          </div>
+        </div>
+
+        <!-- ENERGIA -->
+        <div class="stat-block stat-energia" id="sb-ene">
+          <div class="stat-bar"></div>
+          <div class="stat-name">Energia</div>
+          <div class="stat-value-current" id="disp-ene-atual">—</div>
+          <div class="stat-initial-row">
+            <span class="stat-initial-label">Máx</span>
+            <input type="number" class="stat-initial-input" id="inp-ene-ini" min="1" max="24" value="0"
+              title="Valor inicial de Energia (2d6+12)"
+              oninput="setInicial('ene',+this.value)">
+          </div>
+          <div class="stat-controls">
+            <button class="stat-adj-btn" onclick="ajustarStat('ene',-1)" title="−1 Energia">−</button>
+            <button class="stat-adj-btn" onclick="ajustarStat('ene',+1)" title="+1 Energia">+</button>
+          </div>
+        </div>
+
+        <!-- SORTE -->
+        <div class="stat-block stat-sorte" id="sb-sor">
+          <div class="stat-bar"></div>
+          <div class="stat-name">Sorte</div>
+          <div class="stat-value-current" id="disp-sor-atual">—</div>
+          <div class="stat-initial-row">
+            <span class="stat-initial-label">Máx</span>
+            <input type="number" class="stat-initial-input" id="inp-sor-ini" min="1" max="12" value="0"
+              title="Valor inicial de Sorte (1d6+6)"
+              oninput="setInicial('sor',+this.value)">
+          </div>
+          <div class="stat-controls">
+            <button class="stat-adj-btn" onclick="ajustarStat('sor',-1)" title="−1 Sorte">−</button>
+            <button class="stat-adj-btn" onclick="ajustarStat('sor',+1)" title="+1 Sorte">+</button>
+          </div>
+        </div>
+
+      </div>
+
+      <hr class="sep">
+
+      <div class="rules-grid">
+        <div class="rule-item habilidade">
+          <strong>🔵 Habilidade</strong>
+          Role 1d6 e some 6.<br><em>Máximo: 12</em>
+        </div>
+        <div class="rule-item energia">
+          <strong>❤️ Energia</strong>
+          Role 2d6 e some 12.<br><em>Máximo: 24</em>
+        </div>
+        <div class="rule-item sorte">
+          <strong>🟣 Sorte</strong>
+          Role 1d6 e some 6.<br><em>Máximo: 12</em>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ===== INVENTÁRIO ===== -->
+  <section id="tab-inventario" class="tab-panel">
+
+    <div class="card">
+      <div class="card-title">💰 Recursos</div>
+
+      <div class="resource-row">
+        <span class="resource-label">💰 Ouro</span>
+        <div class="counter-wrap">
+          <button class="stat-adj-btn" onclick="ajustarRecurso('ouro',-1)">−</button>
+          <input type="number" id="inp-ouro" value="0" min="0" oninput="E.ouro=Math.max(0,+this.value||0);gravar()">
+          <button class="stat-adj-btn" onclick="ajustarRecurso('ouro',+1)">+</button>
+        </div>
+        <span class="resource-suffix" style="font-size:.78rem;color:var(--text-dim)">moedas de ouro</span>
+      </div>
+
+      <div class="resource-row">
+        <span class="resource-label">🍖 Provisões</span>
+        <div class="counter-wrap">
+          <button class="stat-adj-btn" onclick="ajustarRecurso('provisoes',-1)">−</button>
+          <input type="number" id="inp-provisoes" value="10" min="0" oninput="E.provisoes=Math.max(0,+this.value||0);gravar()">
+          <button class="stat-adj-btn" onclick="ajustarRecurso('provisoes',+1)">+</button>
+        </div>
+        <button class="btn btn-green btn-sm" onclick="comerProvisao()" title="Consome 1 Provisão e restaura 4 pontos de Energia (máx. inicial)">
+          🍖 Comer <small>(+4 Energia)</small>
+        </button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🎒 Equipamentos & Itens</div>
+      <ul class="equip-list" id="equip-list">
+        <li class="equip-empty" id="equip-vazio">Nenhum item no inventário.</li>
+      </ul>
+      <div class="add-row">
+        <input type="text" id="inp-novo-item" placeholder="Adicionar item (ex: Espada Longa, Poção de Cura...)" maxlength="80"
+          onkeydown="if(event.key==='Enter')adicionarItem()">
+        <button class="btn btn-gold btn-sm" onclick="adicionarItem()">＋ Adicionar</button>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ===== DADOS ===== -->
+  <section id="tab-dados" class="tab-panel">
+
+    <div class="card">
+      <div class="card-title">🎲 Rolar Dados</div>
+      <div class="dice-area">
+        <div class="dice-tray" id="dice-tray">
+          <span style="color:var(--text-dim);font-style:italic;font-size:.85rem">Pressione um botão para rolar…</span>
+        </div>
+        <p class="dice-result-msg" id="dice-result-msg"></p>
+        <div class="dice-btn-row">
+          <button class="btn btn-gold btn-lg" onclick="rolarDados(1)">🎲 Rolar 1d6</button>
+          <button class="btn btn-gold btn-lg" onclick="rolarDados(2)">🎲🎲 Rolar 2d6</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🍀 Testar Sorte</div>
+      <p style="font-size:.82rem;color:var(--text-dim);line-height:1.65;margin-bottom:.75rem">
+        Role 2 dados. Se o resultado for <strong style="color:var(--gold)">igual ou menor</strong> que sua
+        <strong style="color:var(--purple-l)">Sorte atual</strong>, você é
+        <strong style="color:var(--green-l)">Sortudo ✦</strong> — caso contrário,
+        <strong style="color:var(--red-l)">Azarado ✧</strong>.
+        Em ambos os casos, sua Sorte diminui 1.
+      </p>
+      <div class="luck-panel">
+        <div class="luck-current-display">
+          <span class="lcd-label">Sorte Atual</span>
+          <span class="lcd-value" id="luck-disp-val">—</span>
+        </div>
+        <button class="btn btn-purple btn-xl" onclick="testarSorte()">🍀 Testar Sorte</button>
+        <div class="luck-result-msg" id="luck-result-msg"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">
+        📋 Histórico de Rolagens
+        <button class="btn btn-ghost btn-sm" style="margin-left:auto" onclick="limparLogDados()">🗑️ Limpar</button>
+      </div>
+      <div class="roll-log" id="roll-log">
+        <div class="log-empty">Nenhuma rolagem registrada ainda.</div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ===== COMBATE ===== -->
+  <section id="tab-combate" class="tab-panel">
+
+    <div class="card">
+      <div class="card-title">⚔️ Arena de Combate</div>
+
+      <div class="combat-arena">
+
+        <!-- Herói -->
+        <div class="combatant hero">
+          <div class="combatant-name">🧙 Herói</div>
+          <div class="combat-stat">
+            <span class="csl">Habilidade</span>
+            <span class="csv" id="c-hero-hab">—</span>
+          </div>
+          <div class="combat-stat">
+            <span class="csl">Energia</span>
+            <span class="csv" id="c-hero-ene">—</span>
+          </div>
+          <div class="combat-stat">
+            <span class="csl">Sorte</span>
+            <span class="csv" id="c-hero-sor">—</span>
+          </div>
+          <div class="fa-box">
+            <div class="fa-label">Força de Ataque</div>
+            <div class="fa-val" id="fa-heroi">—</div>
+          </div>
+          <div style="margin-top:.6rem">
+            <button class="btn btn-blue btn-sm" style="width:100%" onclick="rolarFA('heroi')">🎲 Rolar FA</button>
+          </div>
+        </div>
+
+        <!-- VS -->
+        <div class="combat-vs">VS</div>
+
+        <!-- Monstro -->
+        <div class="combatant monster">
+          <div class="combatant-name">💀 Monstro</div>
+
+          <div class="form-group" style="margin-bottom:.5rem">
+            <label>Nome</label>
+            <input type="text" id="inp-mob-nome" placeholder="Ex: Goblin, Orc, Dragão..." style="font-size:.82rem"
+              oninput="E.monstro.nome=this.value;gravar()">
+          </div>
+
+          <div class="combat-stat" style="padding:.3rem 0">
+            <span class="csl">Habilidade</span>
+            <div class="mini-counter">
+              <button class="mc-btn" onclick="ajustarMonstro('hab',-1)">−</button>
+              <input type="number" id="inp-mob-hab" value="7" min="0" max="30"
+                oninput="E.monstro.hab=Math.max(0,+this.value||0);gravar()">
+              <button class="mc-btn" onclick="ajustarMonstro('hab',+1)">+</button>
+            </div>
+          </div>
+
+          <div class="combat-stat" style="padding:.3rem 0">
+            <span class="csl">Energia</span>
+            <div class="mini-counter">
+              <button class="mc-btn" onclick="ajustarMonstro('ene',-1)">−</button>
+              <input type="number" id="inp-mob-ene" value="6" min="0" max="99"
+                oninput="E.monstro.ene=Math.max(0,+this.value||0);gravar()">
+              <button class="mc-btn" onclick="ajustarMonstro('ene',+1)">+</button>
+            </div>
+          </div>
+
+          <div class="fa-box">
+            <div class="fa-label">Força de Ataque</div>
+            <div class="fa-val" id="fa-monstro">—</div>
+          </div>
+          <div style="margin-top:.6rem">
+            <button class="btn btn-red btn-sm" style="width:100%" onclick="rolarFA('monstro')">🎲 Rolar FA</button>
+          </div>
+        </div>
+
+      </div><!-- /combat-arena -->
+
+      <!-- Ações de Combate -->
+      <div class="combat-actions">
+        <button class="btn btn-red btn-xl" onclick="combater()">⚔️ Combater!</button>
+        <button class="btn btn-purple" onclick="usarSorteAtaque()" title="Use após acertar o monstro. Sortudo: +2 dano extra. Azarado: −1 dano.">🍀 Sorte no Ataque</button>
+        <button class="btn btn-ghost" onclick="usarSorteDefesa()" title="Use após levar dano. Sortudo: anula o dano. Azarado: +1 dano extra.">🛡️ Sorte na Defesa</button>
+        <button class="btn btn-ghost btn-sm" onclick="resetarCombate()" title="Resetar FA e log de combate">↺ Resetar Rodada</button>
+      </div>
+
+    </div>
+
+    <div class="card">
+      <div class="card-title">
+        📋 Log de Combate
+        <button class="btn btn-ghost btn-sm" style="margin-left:auto" onclick="limparLogCombate()">🗑️ Limpar</button>
+      </div>
+      <div class="combat-log" id="combat-log">
+        <div class="log-empty">Nenhuma batalha registrada ainda.</div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ===== NOTAS ===== -->
+  <section id="tab-notas" class="tab-panel">
+
+    <div class="card">
+      <div class="card-title">📜 Notas da Aventura</div>
+      <textarea id="notas"
+        placeholder="Anote aqui pistas encontradas, senhas, caminhos percorridos, NPCs importantes, itens necessários, decisões tomadas..."
+        oninput="E.notas=this.value;atualizarContadorNotas();gravar()"></textarea>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.4rem">
+        <span class="char-count" id="notas-count">0 caracteres</span>
+        <button class="btn btn-ghost btn-sm" onclick="limparNotas()">🗑️ Limpar Notas</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">💾 Sessão Salva</div>
+      <p style="font-size:.83rem;color:var(--text-dim);line-height:1.65;margin-bottom:.9rem">
+        Sua ficha é <strong style="color:var(--gold)">salva automaticamente</strong> neste navegador (localStorage).
+        Use os botões abaixo para exportar um arquivo <code style="background:var(--surface3);padding:.1rem .3rem;border-radius:3px">.json</code>
+        de backup — ideal para trocar de dispositivo ou compartilhar sua sessão.
+      </p>
+      <div class="save-row">
+        <button class="btn btn-gold" onclick="exportarJSON()">💾 Exportar JSON</button>
+        <label class="btn-file-label">
+          📂 Importar JSON
+          <input type="file" accept=".json" style="display:none" onchange="importarJSON(event)">
+        </label>
+        <button class="btn btn-danger btn-sm" onclick="confirmarApagarTudo()" style="margin-left:auto">🗑️ Apagar Tudo</button>
+      </div>
+    </div>
+
+  </section>
+
+</main>
+
+<footer>
+  ⚔ Aventuras Fantásticas — Ficha Interativa &nbsp;|&nbsp;
+  Fighting Fantasy é uma criação de Steve Jackson & Ian Livingstone &nbsp;|&nbsp;
+  Projeto open-source sem fins lucrativos
+</footer>
+
+<div id="toast"></div>
+
+<!-- ══════════════════════════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════════════════════════ -->
+<script>
+/* ════════════════════════════════════════════════════════════
+   ESTADO GLOBAL
+════════════════════════════════════════════════════════════ */
+const SAVE_KEY = 'af-ficha-v2';
+
+let E = estadoPadrao();
+
+function estadoPadrao() {
+  return {
+    nome: '',
+    hab:  { ini: 0, atu: 0 },
+    ene:  { ini: 0, atu: 0 },
+    sor:  { ini: 0, atu: 0 },
+    ouro: 0,
+    provisoes: 10,
+    itens: [],                // [{ id, nome }]
+    notas: '',
+    monstro: { nome: '', hab: 7, ene: 6 },
+    logDados:   [],           // [{ ts, txt }]
+    logCombate: [],           // [{ ts, txt, cls }]
+  };
+}
+
+/* ════════════════════════════════════════════════════════════
+   INIT
+════════════════════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  carregarEstado();
+  renderizarTudo();
+});
+
+/* ════════════════════════════════════════════════════════════
+   ABAS
+════════════════════════════════════════════════════════════ */
+function abrirAba(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+  if (id === 'combate') sincronizarCombate();
+  if (id === 'dados')   sincronizarSorte();
+}
+
+/* ════════════════════════════════════════════════════════════
+   UTILITÁRIOS DADOS
+════════════════════════════════════════════════════════════ */
+function d6() { return Math.floor(Math.random() * 6) + 1; }
+
+function agora() {
+  return new Date().toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
+}
+
+/* ════════════════════════════════════════════════════════════
+   PERSONAGEM
+════════════════════════════════════════════════════════════ */
+function gerarPersonagem() {
+  const hab = d6() + 6;
+  const ene = d6() + d6() + 12;
+  const sor = d6() + 6;
+
+  E.hab = { ini: hab, atu: hab };
+  E.ene = { ini: ene, atu: ene };
+  E.sor = { ini: sor, atu: sor };
+
+  gravar();
+  renderizarAtributos();
+  flashStats();
+  toast(`⚔ Personagem gerado: Hab ${hab} | Ene ${ene} | Sor ${sor}`, 'info');
+}
+
+function flashStats() {
+  ['sb-hab','sb-ene','sb-sor'].forEach(id => {
+    const el = document.getElementById(id);
+    el.classList.remove('flash');
+    void el.offsetWidth; // reflow
+    el.classList.add('flash');
+  });
+}
+
+function ajustarStat(stat, delta) {
+  const s = E[stat];
+  const max = s.ini > 0 ? s.ini : 99;
+  s.atu = Math.max(0, Math.min(max, s.atu + delta));
+  gravar();
+  renderizarAtributos();
+  sincronizarCombate();
+}
+
+function setInicial(stat, val) {
+  const s = E[stat];
+  s.ini = Math.max(0, val);
+  if (s.atu === 0) s.atu = s.ini;          // primeira atribuição
+  if (s.atu > s.ini && s.ini > 0) s.atu = s.ini;
+  gravar();
+  renderizarAtributos();
+}
+
+function confirmarReset() {
+  if (!confirm('⚠️ Isso vai apagar o personagem atual (nome e atributos).\nContinuar?')) return;
+  E.nome = '';
+  E.hab  = { ini: 0, atu: 0 };
+  E.ene  = { ini: 0, atu: 0 };
+  E.sor  = { ini: 0, atu: 0 };
+  gravar();
+  renderizarAtributos();
+  document.getElementById('inp-nome').value = '';
+  toast('Personagem resetado.', 'info');
+}
+
+/* ════════════════════════════════════════════════════════════
+   INVENTÁRIO
+════════════════════════════════════════════════════════════ */
+function ajustarRecurso(recurso, delta) {
+  E[recurso] = Math.max(0, (E[recurso] || 0) + delta);
+  document.getElementById('inp-' + recurso).value = E[recurso];
+  gravar();
+}
+
+function comerProvisao() {
+  if (E.provisoes <= 0) { toast('Sem provisões!', 'err'); return; }
+  if (E.ene.ini <= 0)   { toast('Gere um personagem primeiro!', 'err'); return; }
+  if (E.ene.atu >= E.ene.ini) { toast('Energia já está no máximo!', 'info'); return; }
+
+  E.provisoes--;
+  const antes = E.ene.atu;
+  E.ene.atu = Math.min(E.ene.ini, E.ene.atu + 4);
+  const ganho = E.ene.atu - antes;
+
+  gravar();
+  renderizarAtributos();
+  document.getElementById('inp-provisoes').value = E.provisoes;
+  adicionarLogDados(`🍖 Provisão consumida → +${ganho} Energia (${antes} → ${E.ene.atu}/${E.ene.ini})`);
+  toast(`🍖 +${ganho} Energia`, 'ok');
+}
+
+function adicionarItem() {
+  const inp = document.getElementById('inp-novo-item');
+  const nome = inp.value.trim();
+  if (!nome) return;
+  E.itens.push({ id: Date.now() + Math.random(), nome });
+  inp.value = '';
+  gravar();
+  renderizarItens();
+}
+
+function removerItem(id) {
+  E.itens = E.itens.filter(i => i.id !== id);
+  gravar();
+  renderizarItens();
+}
+
+function renderizarItens() {
+  const lista = document.getElementById('equip-list');
+  const vazio = document.getElementById('equip-vazio');
+
+  // Remove itens antigos (mantém o <li> de vazio)
+  lista.querySelectorAll('.equip-item').forEach(el => el.remove());
+
+  if (E.itens.length === 0) {
+    vazio.style.display = '';
+    return;
+  }
+  vazio.style.display = 'none';
+
+  E.itens.forEach(item => {
+    const li = document.createElement('li');
+    li.className = 'equip-item';
+    li.innerHTML = `<span>⚔️ ${escapar(item.nome)}</span>
+      <button class="equip-remove" onclick="removerItem(${item.id})" title="Remover item">✕</button>`;
+    lista.appendChild(li);
+  });
+}
+
+/* ════════════════════════════════════════════════════════════
+   DADOS
+════════════════════════════════════════════════════════════ */
+function rolarDados(qtd) {
+  const res = Array.from({ length: qtd }, () => d6());
+  const total = res.reduce((a,b) => a+b, 0);
+
+  // Animação
+  const tray = document.getElementById('dice-tray');
+  tray.innerHTML = '';
+  res.forEach(v => {
+    const d = document.createElement('div');
+    d.className = 'die-face rolling';
+    d.textContent = v;
+    tray.appendChild(d);
+    setTimeout(() => d.classList.remove('rolling'), 500);
+  });
+
+  const msg = qtd === 1
+    ? `Resultado: <strong>${res[0]}</strong>`
+    : `Resultado: <strong>${res.join(' + ')} = ${total}</strong>`;
+  const msgEl = document.getElementById('dice-result-msg');
+  msgEl.innerHTML = msg;
+  msgEl.className = 'dice-result-msg';
+
+  const logTxt = qtd === 1
+    ? `🎲 1d6 → <strong>${res[0]}</strong>`
+    : `🎲🎲 2d6 → ${res[0]} + ${res[1]} = <strong>${total}</strong>`;
+  adicionarLogDados(logTxt);
+
+  return total;
+}
+
+function testarSorte() {
+  if (E.sor.atu <= 0) {
+    document.getElementById('luck-result-msg').innerHTML =
+      '<span style="color:var(--text-dim)">⚠️ Sorte atual é 0!</span>';
+    return;
+  }
+
+  const r1 = d6(), r2 = d6();
+  const total = r1 + r2;
+  const sorteAntes = E.sor.atu;
+  const sortudo = total <= sorteAntes;
+
+  // Mostra dados no tray
+  const tray = document.getElementById('dice-tray');
+  tray.innerHTML = '';
+  [r1, r2].forEach(v => {
+    const d = document.createElement('div');
+    d.className = 'die-face rolling';
+    d.textContent = v;
+    tray.appendChild(d);
+    setTimeout(() => d.classList.remove('rolling'), 500);
+  });
+
+  // Atualiza Sorte
+  E.sor.atu = Math.max(0, E.sor.atu - 1);
+  gravar();
+  renderizarAtributos();
+  sincronizarSorte();
+
+  const msgEl = document.getElementById('luck-result-msg');
+  const diceMsg = document.getElementById('dice-result-msg');
+
+  if (sortudo) {
+    msgEl.innerHTML =
+      `<strong style="color:var(--green-l);font-size:1.3rem">✦ SORTUDO! ✦</strong><br>
+       <span style="color:var(--text-dim);font-size:.8rem">${r1}+${r2} = ${total} ≤ ${sorteAntes} &nbsp;|&nbsp; Sorte: ${sorteAntes} → ${E.sor.atu}</span>`;
+    diceMsg.innerHTML = `Resultado: <strong>${total}</strong>`;
+    diceMsg.className = 'dice-result-msg lucky';
+    adicionarLogDados(`🍀 Testar Sorte → ${r1}+${r2}=<strong>${total}</strong> ≤ ${sorteAntes} → <strong style="color:var(--green-l)">SORTUDO!</strong> (Sorte ${sorteAntes}→${E.sor.atu})`);
+  } else {
+    msgEl.innerHTML =
+      `<strong style="color:var(--red-l);font-size:1.3rem">✧ AZARADO! ✧</strong><br>
+       <span style="color:var(--text-dim);font-size:.8rem">${r1}+${r2} = ${total} > ${sorteAntes} &nbsp;|&nbsp; Sorte: ${sorteAntes} → ${E.sor.atu}</span>`;
+    diceMsg.innerHTML = `Resultado: <strong>${total}</strong>`;
+    diceMsg.className = 'dice-result-msg unlucky';
+    adicionarLogDados(`💔 Testar Sorte → ${r1}+${r2}=<strong>${total}</strong> > ${sorteAntes} → <strong style="color:var(--red-l)">AZARADO!</strong> (Sorte ${sorteAntes}→${E.sor.atu})`);
+  }
+
+  return sortudo;
+}
+
+function sincronizarSorte() {
+  const el = document.getElementById('luck-disp-val');
+  if (el) el.textContent = E.sor.atu > 0 ? E.sor.atu : '—';
+}
+
+function adicionarLogDados(txt) {
+  E.logDados.unshift({ ts: agora(), txt });
+  if (E.logDados.length > 80) E.logDados.pop();
+  gravar();
+  renderizarLogDados();
+}
+
+function renderizarLogDados() {
+  const el = document.getElementById('roll-log');
+  if (!el) return;
+  if (!E.logDados.length) {
+    el.innerHTML = '<div class="log-empty">Nenhuma rolagem registrada ainda.</div>';
+    return;
+  }
+  el.innerHTML = E.logDados.map(e =>
+    `<div class="roll-entry"><span class="ts">[${e.ts}]</span> ${e.txt}</div>`
+  ).join('');
+}
+
+function limparLogDados() {
+  E.logDados = [];
+  gravar();
+  renderizarLogDados();
+}
+
+/* ════════════════════════════════════════════════════════════
+   COMBATE
+════════════════════════════════════════════════════════════ */
+function sincronizarCombate() {
+  const g = v => v > 0 ? v : '—';
+  document.getElementById('c-hero-hab').textContent = g(E.hab.atu);
+  document.getElementById('c-hero-ene').textContent = g(E.ene.atu);
+  document.getElementById('c-hero-sor').textContent = g(E.sor.atu);
+}
+
+function ajustarMonstro(stat, delta) {
+  const inputId = stat === 'hab' ? 'inp-mob-hab' : 'inp-mob-ene';
+  E.monstro[stat] = Math.max(0, (E.monstro[stat] || 0) + delta);
+  document.getElementById(inputId).value = E.monstro[stat];
+  gravar();
+}
+
+function rolarFA(quem) {
+  const r1 = d6(), r2 = d6();
+  let hab, fa, nome;
+
+  if (quem === 'heroi') {
+    hab = E.hab.atu;
+    if (hab <= 0) { toast('Gere um personagem primeiro!', 'err'); return; }
+    fa = r1 + r2 + hab;
+    nome = E.nome || 'Herói';
+    document.getElementById('fa-heroi').textContent = fa;
+    E._heroFA = fa;
+    adicionarLogCombate(`🧙 ${escapar(nome)} rola FA: ${r1}+${r2}+${hab}(Hab) = <strong>${fa}</strong>`, 'cl-system');
+  } else {
+    hab = E.monstro.hab;
+    fa = r1 + r2 + hab;
+    nome = E.monstro.nome || 'Monstro';
+    document.getElementById('fa-monstro').textContent = fa;
+    E._monsterFA = fa;
+    adicionarLogCombate(`💀 ${escapar(nome)} rola FA: ${r1}+${r2}+${hab}(Hab) = <strong>${fa}</strong>`, 'cl-system');
+  }
+}
+
+function combater() {
+  if (E.hab.atu <= 0) { toast('Crie um personagem primeiro!', 'err'); return; }
+
+  // Rola para os dois combatentes
+  const h1 = d6(), h2 = d6();
+  const m1 = d6(), m2 = d6();
+  const heroFA    = h1 + h2 + E.hab.atu;
+  const monsterFA = m1 + m2 + E.monstro.hab;
+
+  E._heroFA    = heroFA;
+  E._monsterFA = monsterFA;
+  document.getElementById('fa-heroi').textContent   = heroFA;
+  document.getElementById('fa-monstro').textContent = monsterFA;
+
+  const hNome = E.nome    || 'Herói';
+  const mNome = E.monstro.nome || 'Monstro';
+
+  adicionarLogCombate(`─────────── Rodada ───────────`, 'cl-divider');
+  adicionarLogCombate(`🧙 ${escapar(hNome)}: ${h1}+${h2}+${E.hab.atu} = <strong>${heroFA}</strong>`, '');
+  adicionarLogCombate(`💀 ${escapar(mNome)}: ${m1}+${m2}+${E.monstro.hab} = <strong>${monsterFA}</strong>`, '');
+
+  if (heroFA > monsterFA) {
+    const eneAntes = E.monstro.ene;
+    E.monstro.ene = Math.max(0, E.monstro.ene - 2);
+    document.getElementById('inp-mob-ene').value = E.monstro.ene;
+    adicionarLogCombate(
+      `⚔️ ${escapar(hNome)} ACERTA! ${escapar(mNome)} perde 2 Energia (${eneAntes} → ${E.monstro.ene})`,
+      'cl-hero-win'
+    );
+    if (E.monstro.ene <= 0) {
+      adicionarLogCombate(`💀 ${escapar(mNome)} foi derrotado! Vitória!`, 'cl-hero-win');
+      toast(`⚔️ ${mNome} derrotado!`, 'ok');
+    }
+  } else if (monsterFA > heroFA) {
+    const eneAntes = E.ene.atu;
+    E.ene.atu = Math.max(0, E.ene.atu - 2);
+    adicionarLogCombate(
+      `🩸 ${escapar(mNome)} ACERTA! ${escapar(hNome)} perde 2 Energia (${eneAntes} → ${E.ene.atu})`,
+      'cl-mob-win'
+    );
+    if (E.ene.atu <= 0) {
+      adicionarLogCombate(`💀 ${escapar(hNome)} caiu! A aventura termina aqui...`, 'cl-mob-win');
+      toast('💀 O herói foi derrotado!', 'err');
+    }
+  } else {
+    adicionarLogCombate(`🛡️ Empate! Nenhum dano. Role novamente.`, 'cl-tie');
+  }
+
+  gravar();
+  renderizarAtributos();
+  sincronizarCombate();
+}
+
+function usarSorteAtaque() {
+  if (E.sor.atu <= 0) { adicionarLogCombate('⚠️ Sorte insuficiente para usar!', 'cl-system'); return; }
+
+  const r1 = d6(), r2 = d6();
+  const total = r1 + r2;
+  const sorteAntes = E.sor.atu;
+  const sortudo = total <= sorteAntes;
+  const mNome = E.monstro.nome || 'Monstro';
+
+  E.sor.atu = Math.max(0, E.sor.atu - 1);
+
+  if (sortudo) {
+    // Dano total = 4 (já tirou 2, tira mais 2)
+    E.monstro.ene = Math.max(0, E.monstro.ene - 2);
+    document.getElementById('inp-mob-ene').value = E.monstro.ene;
+    adicionarLogCombate(
+      `🍀 SORTE NO ATAQUE! (${r1}+${r2}=${total} ≤ ${sorteAntes}) → SORTUDO! ${escapar(mNome)} perde +2 Energia extra (total 4 dano). Sorte: ${sorteAntes}→${E.sor.atu}`,
+      'cl-lucky'
+    );
+  } else {
+    // Dano total = 1 (já tirou 2, devolve 1)
+    E.monstro.ene = E.monstro.ene + 1;
+    document.getElementById('inp-mob-ene').value = E.monstro.ene;
+    adicionarLogCombate(
+      `💔 AZARADO NO ATAQUE! (${r1}+${r2}=${total} > ${sorteAntes}) → ${escapar(mNome)} recupera 1 Energia (total 1 dano). Sorte: ${sorteAntes}→${E.sor.atu}`,
+      'cl-unlucky'
+    );
+  }
+
+  gravar();
+  renderizarAtributos();
+  sincronizarCombate();
+}
+
+function usarSorteDefesa() {
+  if (E.sor.atu <= 0) { adicionarLogCombate('⚠️ Sorte insuficiente para usar!', 'cl-system'); return; }
+
+  const r1 = d6(), r2 = d6();
+  const total = r1 + r2;
+  const sorteAntes = E.sor.atu;
+  const sortudo = total <= sorteAntes;
+  const hNome = E.nome || 'Herói';
+
+  E.sor.atu = Math.max(0, E.sor.atu - 1);
+
+  if (sortudo) {
+    // Anula o dano (já tomou 2, recupera 2)
+    const eneMax = E.ene.ini > 0 ? E.ene.ini : 999;
+    E.ene.atu = Math.min(eneMax, E.ene.atu + 2);
+    adicionarLogCombate(
+      `🍀 SORTE NA DEFESA! (${r1}+${r2}=${total} ≤ ${sorteAntes}) → SORTUDO! ${escapar(hNome)} evita o golpe! +2 Energia de volta. Sorte: ${sorteAntes}→${E.sor.atu}`,
+      'cl-lucky'
+    );
+  } else {
+    // Dano extra (toma mais 1, total 3)
+    E.ene.atu = Math.max(0, E.ene.atu - 1);
+    adicionarLogCombate(
+      `💔 AZARADO NA DEFESA! (${r1}+${r2}=${total} > ${sorteAntes}) → ${escapar(hNome)} leva 1 Energia extra de dano! Sorte: ${sorteAntes}→${E.sor.atu}`,
+      'cl-unlucky'
+    );
+    if (E.ene.atu <= 0) {
+      adicionarLogCombate(`💀 ${escapar(hNome)} caiu!`, 'cl-mob-win');
+    }
+  }
+
+  gravar();
+  renderizarAtributos();
+  sincronizarCombate();
+}
+
+function adicionarLogCombate(txt, cls) {
+  E.logCombate.unshift({ ts: agora(), txt, cls: cls || '' });
+  if (E.logCombate.length > 150) E.logCombate.pop();
+  renderizarLogCombate();
+}
+
+function renderizarLogCombate() {
+  const el = document.getElementById('combat-log');
+  if (!el) return;
+  if (!E.logCombate.length) {
+    el.innerHTML = '<div class="log-empty">Nenhuma batalha registrada ainda.</div>';
+    return;
+  }
+  el.innerHTML = E.logCombate.map(e =>
+    `<div class="cl-entry ${e.cls}"><span class="cl-ts">[${e.ts}]</span> ${e.txt}</div>`
+  ).join('');
+}
+
+function limparLogCombate() {
+  E.logCombate = [];
+  gravar();
+  renderizarLogCombate();
+}
+
+function resetarCombate() {
+  document.getElementById('fa-heroi').textContent   = '—';
+  document.getElementById('fa-monstro').textContent = '—';
+  E._heroFA = null;
+  E._monsterFA = null;
+}
+
+/* ════════════════════════════════════════════════════════════
+   NOTAS
+════════════════════════════════════════════════════════════ */
+function atualizarContadorNotas() {
+  const el = document.getElementById('notas-count');
+  if (el) el.textContent = `${(E.notas || '').length} caracteres`;
+}
+
+function limparNotas() {
+  if (!confirm('Limpar todas as notas?')) return;
+  E.notas = '';
+  document.getElementById('notas').value = '';
+  atualizarContadorNotas();
+  gravar();
+}
+
+/* ════════════════════════════════════════════════════════════
+   SALVAR / CARREGAR (localStorage)
+════════════════════════════════════════════════════════════ */
+function gravar() {
+  try {
+    const salvar = { ...E };
+    delete salvar._heroFA;
+    delete salvar._monsterFA;
+    localStorage.setItem(SAVE_KEY, JSON.stringify(salvar));
+  } catch(e) {
+    console.warn('Erro ao gravar no localStorage:', e);
+  }
+}
+
+function carregarEstado() {
+  try {
+    const raw = localStorage.getItem(SAVE_KEY);
+    if (!raw) return;
+    const data = JSON.parse(raw);
+    // Merge seguro
+    E = { ...estadoPadrao(), ...data };
+    // Garante sub-objetos
+    E.hab = { ...estadoPadrao().hab, ...data.hab };
+    E.ene = { ...estadoPadrao().ene, ...data.ene };
+    E.sor = { ...estadoPadrao().sor, ...data.sor };
+    E.monstro = { ...estadoPadrao().monstro, ...data.monstro };
+    E.itens = Array.isArray(data.itens) ? data.itens : [];
+    E.logDados = Array.isArray(data.logDados) ? data.logDados : [];
+    E.logCombate = Array.isArray(data.logCombate) ? data.logCombate : [];
+  } catch(e) {
+    console.warn('Erro ao carregar estado:', e);
+    E = estadoPadrao();
+  }
+}
+
+/* ════════════════════════════════════════════════════════════
+   EXPORTAR / IMPORTAR JSON
+════════════════════════════════════════════════════════════ */
+function exportarJSON() {
+  const nomeSlug = (E.nome || 'aventureiro')
+    .toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'');
+  const data = new Date().toISOString().slice(0, 10);
+  const filename = `af-${nomeSlug}-${data}.json`;
+
+  const exportObj = { ...E, _versao: '2.0', _exportadoEm: new Date().toISOString() };
+  delete exportObj._heroFA;
+  delete exportObj._monsterFA;
+
+  const blob = new Blob([JSON.stringify(exportObj, null, 2)], { type: 'application/json' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url; a.download = filename; a.click();
+  URL.revokeObjectURL(url);
+  toast(`💾 Ficha salva como ${filename}`, 'ok');
+}
+
+function importarJSON(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    try {
+      const data = JSON.parse(ev.target.result);
+      const nomePrev = data.nome || 'sem nome';
+      if (!confirm(`Carregar a ficha de "${nomePrev}"?\nOs dados atuais serão substituídos.`)) return;
+      delete data._versao;
+      delete data._exportadoEm;
+      E = { ...estadoPadrao(), ...data };
+      E.hab = { ...estadoPadrao().hab, ...(data.hab||{}) };
+      E.ene = { ...estadoPadrao().ene, ...(data.ene||{}) };
+      E.sor = { ...estadoPadrao().sor, ...(data.sor||{}) };
+      E.monstro = { ...estadoPadrao().monstro, ...(data.monstro||{}) };
+      E.itens = Array.isArray(data.itens) ? data.itens : [];
+      E.logDados = Array.isArray(data.logDados) ? data.logDados : [];
+      E.logCombate = Array.isArray(data.logCombate) ? data.logCombate : [];
+      gravar();
+      renderizarTudo();
+      toast(`✅ Ficha de "${nomePrev}" carregada!`, 'ok');
+    } catch(e) {
+      toast('❌ Arquivo JSON inválido!', 'err');
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+function confirmarApagarTudo() {
+  if (!confirm('⚠️ Apagar TUDO — personagem, inventário, notas e logs?\nEsta ação NÃO pode ser desfeita.')) return;
+  localStorage.removeItem(SAVE_KEY);
+  location.reload();
+}
+
+/* ════════════════════════════════════════════════════════════
+   RENDERIZAÇÃO GLOBAL
+════════════════════════════════════════════════════════════ */
+function renderizarTudo() {
+  // Nome
+  const nomeEl = document.getElementById('inp-nome');
+  if (nomeEl) nomeEl.value = E.nome;
+
+  renderizarAtributos();
+  renderizarInventario();
+  renderizarItens();
+  renderizarLogDados();
+  renderizarLogCombate();
+  sincronizarCombate();
+  sincronizarSorte();
+  atualizarContadorNotas();
+
+  // Notas
+  const notasEl = document.getElementById('notas');
+  if (notasEl) notasEl.value = E.notas;
+
+  // Monstro
+  document.getElementById('inp-mob-nome').value = E.monstro.nome;
+  document.getElementById('inp-mob-hab').value  = E.monstro.hab;
+  document.getElementById('inp-mob-ene').value  = E.monstro.ene;
+}
+
+function renderizarAtributos() {
+  const fmt = v => v > 0 ? v : '—';
+
+  document.getElementById('disp-hab-atual').textContent = fmt(E.hab.atu);
+  document.getElementById('disp-ene-atual').textContent = fmt(E.ene.atu);
+  document.getElementById('disp-sor-atual').textContent = fmt(E.sor.atu);
+
+  const habIni = document.getElementById('inp-hab-ini');
+  const eneIni = document.getElementById('inp-ene-ini');
+  const sorIni = document.getElementById('inp-sor-ini');
+  if (document.activeElement !== habIni) habIni.value = E.hab.ini || '';
+  if (document.activeElement !== eneIni) eneIni.value = E.ene.ini || '';
+  if (document.activeElement !== sorIni) sorIni.value = E.sor.ini || '';
+
+  sincronizarSorte();
+  sincronizarCombate();
+}
+
+function renderizarInventario() {
+  const ouroEl = document.getElementById('inp-ouro');
+  const provEl = document.getElementById('inp-provisoes');
+  if (document.activeElement !== ouroEl) ouroEl.value = E.ouro;
+  if (document.activeElement !== provEl) provEl.value = E.provisoes;
+}
+
+/* ════════════════════════════════════════════════════════════
+   TOAST
+════════════════════════════════════════════════════════════ */
+let _toastTimer = null;
+function toast(msg, tipo = 'info') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = `show toast-${tipo}`;
+  clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(() => { el.className = ''; }, 3000);
+}
+
+/* ════════════════════════════════════════════════════════════
+   UTILITÁRIO SEGURANÇA
+════════════════════════════════════════════════════════════ */
+function escapar(str) {
+  return String(str)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+</script>
+</body>
+</html>
