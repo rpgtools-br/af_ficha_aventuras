@@ -2,7 +2,7 @@
 
 Ficha interativa para jogar os livros-jogos da série **Aventuras Fantásticas** (Fighting Fantasy), criada por Steve Jackson e Ian Livingstone.
 
-Projeto 100% client-side: um único arquivo HTML com CSS e JavaScript embutidos. Sem banco de dados, sem backend. Funciona offline e pode ser hospedado no GitHub Pages.
+Projeto 100% client-side: um único arquivo HTML com CSS e JavaScript embutidos. Sem banco de dados, sem backend. **Funciona offline** (PWA com Service Worker) e pode ser instalado diretamente do navegador.
 
 ---
 
@@ -21,6 +21,11 @@ Projeto 100% client-side: um único arquivo HTML com CSS e JavaScript embutidos.
 - **Exportar JSON** — salva a ficha como arquivo `.json` no computador
 - **Importar JSON** — carrega uma sessão salva anteriormente
 - Botões de Salvar/Carregar também ficam no cabeçalho (acesso rápido)
+
+### Offline / PWA
+- **Service Worker** cacheia o app e as fontes na primeira visita
+- Funciona **sem internet** a partir da segunda visita
+- Instalável como app no celular e desktop (botão "Instalar" no navegador)
 
 ---
 
@@ -75,9 +80,12 @@ Para hospedar sua própria cópia:
 ## 📁 Estrutura do Projeto
 
 ```
-index.html   ← Tudo em um único arquivo (HTML + CSS + JS)
-README.md    ← Este arquivo
-.gitignore   ← Exclui arquivos locais de desenvolvimento
+index.html     ← Aplicação completa (HTML + CSS + JS)
+manifest.json  ← PWA manifest (nome, ícone, cores)
+sw.js          ← Service Worker (cache offline)
+icon.svg       ← Ícone da aplicação
+README.md      ← Este arquivo
+.gitignore     ← Exclui arquivos locais de desenvolvimento
 ```
 
 ## 🔗 Repositório
