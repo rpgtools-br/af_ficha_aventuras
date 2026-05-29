@@ -10,7 +10,7 @@ Projeto 100% client-side: um único arquivo HTML com CSS e JavaScript embutidos.
 
 | Aba | O que faz |
 |-----|-----------|
-| 🧙 **Personagem** | Nome, HABILIDADE, ENERGIA e SORTE — com geração aleatória por dados |
+| 🧙 **Personagem** | Nome medieval gerado automaticamente (ex: *"Liria, Sombra Silenciosa"*), HABILIDADE, ENERGIA e SORTE |
 | 🎒 **Inventário** | Ouro, Provisões (com botão "Comer +4 Energia") e lista de itens |
 | 🎲 **Dados** | Rolar 1d6 / 2d6, Testar Sorte com feedback visual e histórico |
 | ⚔️ **Combate** | Arena completa com Força de Ataque, Sorte no Ataque/Defesa e log |
@@ -80,12 +80,14 @@ Para hospedar sua própria cópia:
 ## 📁 Estrutura do Projeto
 
 ```
-index.html     ← Aplicação completa (HTML + CSS + JS)
-manifest.json  ← PWA manifest (nome, ícone, cores)
-sw.js          ← Service Worker (cache offline)
-icon.svg       ← Ícone da aplicação
-README.md      ← Este arquivo
-.gitignore     ← Exclui arquivos locais de desenvolvimento
+index.html         ← Aplicação completa (HTML + CSS + JS)
+names.js           ← Listas de nomes medievais e títulos
+manifest.json      ← PWA manifest (nome, ícone, cores)
+sw.js              ← Service Worker (cache offline)
+rpgtools-logo.png  ← Favicon e ícone PWA
+icon.svg           ← Ícone fallback (espada)
+README.md          ← Este arquivo
+.gitignore         ← Exclui arquivos locais de desenvolvimento
 ```
 
 ## 🔗 Repositório
