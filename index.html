@@ -1402,8 +1402,9 @@ function ajustarStat(stat, delta) {
 
 function setInicial(stat, val) {
   const s = E[stat];
-  s.ini = Math.max(0, val);
-  if (s.atu === 0) s.atu = s.ini;          // primeira atribuição
+  const iniAnterior = s.ini;
+  s.ini = Math.max(0, val || 0);
+  if (s.atu === iniAnterior || s.atu === 0) s.atu = s.ini;
   if (s.atu > s.ini && s.ini > 0) s.atu = s.ini;
   gravar();
   renderizarAtributos();
