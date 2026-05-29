@@ -7,8 +7,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cinzel+Decorative:wght@700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+  <link rel="icon" href="rpgtools-logo.png" type="image/png" />
   <link rel="manifest" href="manifest.json" />
-  <link rel="apple-touch-icon" href="icon.svg" />
+  <link rel="apple-touch-icon" href="rpgtools-logo.png" />
   <meta name="theme-color" content="#c9941a" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <style>
@@ -1292,6 +1293,7 @@
 <!-- ══════════════════════════════════════════════════════════
      JAVASCRIPT
 ══════════════════════════════════════════════════════════ -->
+<script src="names.js"></script>
 <script>
 /* ════════════════════════════════════════════════════════════
    ESTADO GLOBAL
@@ -1348,6 +1350,16 @@ function agora() {
 /* ════════════════════════════════════════════════════════════
    PERSONAGEM
 ════════════════════════════════════════════════════════════ */
+function gerarNomeMedieval() {
+  if (typeof NOMES_LISTA === 'undefined' || typeof TITULOS_LISTA === 'undefined') return '';
+  const gens = ['m', 'f', 'n'];
+  const gen  = gens[Math.floor(Math.random() * gens.length)];
+  const lista = NOMES_LISTA[gen];
+  const nome   = lista[Math.floor(Math.random() * lista.length)];
+  const titulo = TITULOS_LISTA[Math.floor(Math.random() * TITULOS_LISTA.length)];
+  return `${nome}, ${titulo}`;
+}
+
 function gerarPersonagem() {
   const hab = d6() + 6;
   const ene = d6() + d6() + 12;
@@ -1356,6 +1368,13 @@ function gerarPersonagem() {
   E.hab = { ini: hab, atu: hab };
   E.ene = { ini: ene, atu: ene };
   E.sor = { ini: sor, atu: sor };
+
+  const nomeGerado = gerarNomeMedieval();
+  if (nomeGerado) {
+    E.nome = nomeGerado;
+    const nomeEl = document.getElementById('inp-nome');
+    if (nomeEl) nomeEl.value = nomeGerado;
+  }
 
   gravar();
   renderizarAtributos();

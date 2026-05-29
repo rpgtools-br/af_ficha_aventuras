@@ -2,13 +2,14 @@
    SERVICE WORKER — Aventuras Fantásticas Ficha Interativa
    Incrementar CACHE_VER ao publicar nova versão do index.html
 ════════════════════════════════════════════════════════════ */
-const CACHE_VER  = 'v1';
+const CACHE_VER  = 'v2';
 const CACHE_APP  = `af-app-${CACHE_VER}`;
 const CACHE_FONT = `af-fonts-${CACHE_VER}`;
 
 const CORE = [
   './',
   './index.html',
+  './names.js',
   './manifest.json',
   './icon.svg',
 ];
