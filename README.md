@@ -61,10 +61,14 @@ Projeto 100% client-side: um único arquivo HTML com CSS e JavaScript embutidos.
 Basta abrir o arquivo `index.html` em qualquer navegador moderno. Não precisa de servidor.
 
 ### GitHub Pages
-1. Crie um repositório no GitHub (ex: `af-ficha`)
+O projeto está hospedado em:
+**[https://rpgtools-br.github.io/af_ficha_aventuras/](https://rpgtools-br.github.io/af_ficha_aventuras/)**
+
+Para hospedar sua própria cópia:
+1. Crie um repositório no GitHub
 2. Faça upload do `index.html` para a branch `main`
 3. Vá em **Settings → Pages → Source**: selecione `main` / `root`
-4. Acesse `https://seu-usuario.github.io/af-ficha/`
+4. Acesse `https://seu-usuario.github.io/seu-repo/`
 
 ---
 
@@ -73,7 +77,17 @@ Basta abrir o arquivo `index.html` em qualquer navegador moderno. Não precisa d
 ```
 index.html   ← Tudo em um único arquivo (HTML + CSS + JS)
 README.md    ← Este arquivo
+.gitignore   ← Exclui arquivos locais de desenvolvimento
 ```
+
+## 🔗 Repositório
+
+Parte da organização **[rpgtools-br](https://github.com/rpgtools-br)** — ferramentas de RPG em português.
+
+| | |
+|---|---|
+| Repositório | https://github.com/rpgtools-br/af_ficha_aventuras |
+| Site ao vivo | https://rpgtools-br.github.io/af_ficha_aventuras/ |
 
 ---
 
