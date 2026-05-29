@@ -1,1 +1,6 @@
 CONTEXTO_SESSAO.md
+node_modules/
+package.json
+package-lock.json
+verify_test.js
+verify_screenshot.png
