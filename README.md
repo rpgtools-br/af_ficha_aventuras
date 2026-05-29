@@ -10,7 +10,7 @@ Projeto 100% client-side: um único arquivo HTML com CSS e JavaScript embutidos.
 
 | Aba | O que faz |
 |-----|-----------|
-| 🧙 **Personagem** | Nome medieval gerado automaticamente (ex: *"Liria, Sombra Silenciosa"*), HABILIDADE, ENERGIA e SORTE |
+| 🧙 **Personagem** | Nome medieval gerado automaticamente (ex: *"Liria, Sombra Silenciosa"*), HABILIDADE, ENERGIA e SORTE — valores Máx editáveis com sincronização automática do atual |
 | 🎒 **Inventário** | Ouro, Provisões (com botão "Comer +4 Energia") e lista de itens |
 | 🎲 **Dados** | Rolar 1d6 / 2d6, Testar Sorte com feedback visual e histórico |
 | ⚔️ **Combate** | Arena completa com Força de Ataque, Sorte no Ataque/Defesa e log |
